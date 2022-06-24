@@ -8,7 +8,7 @@ public class FileOperations {
 
     public void createFile(String fileName) {
         try {
-            File file = new File("A:\\Coding Projects\\resources\\files\\" + fileName);
+            File file = new File("resources/files/" + fileName);
             if (file.createNewFile()) {
                 System.out.println("File created: " + file.getName());
             } else {
@@ -27,10 +27,10 @@ public class FileOperations {
         }
     }
 
-    public File getFileForCategory(String category) {
-        if(category != null) {
-            String catName = category.toLowerCase();
-            File file = new File("A:\\Coding Projects\\resources\\files\\" + catName + ".csv");
+    public File getFileByName(String name) {
+        if(name != null) {
+            String catName = name.toLowerCase();
+            File file = new File("resources/files/" + catName + ".csv");
             if (file.exists()) {
                 return file;
             } else {
@@ -47,6 +47,14 @@ public class FileOperations {
         } catch(IOException e) {
             e.printStackTrace();
             return "An error occured when trying to read the file.";
+        }
+    }
+
+    public void createCategoryFiles(String categories) {
+        String line = readFromFile(getFileByName(categories));
+        String[] arrCategories = line.toLowerCase().split(",");
+        for(String s : arrCategories) {
+            createFile(s + ".csv");
         }
     }
 }

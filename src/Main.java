@@ -11,12 +11,9 @@ public class Main extends Application {
 
   public static void main(String[] args) {
     FileOperations ops = new FileOperations();
-    ops.createFile("sexism.csv");
-    ops.createFile("drugs.csv");
-    ops.createFile("insults.csv");
-    ops.createFile("homophobic.csv");
-    ops.createFile("racism.csv");
-    launch(args);
+    ops.createFile("categories.csv");
+    ops.createCategoryFiles("categories");
+    //launch(args);
   }
 
   @Override

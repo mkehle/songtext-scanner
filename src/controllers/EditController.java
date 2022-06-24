@@ -28,6 +28,7 @@ public class EditController implements Initializable {
     @FXML
     private Label hintLabel;
     private List<String> entries;
+    private List<String> categories;
     private FileOperations ops;
     private String currCategory;
 
@@ -35,8 +36,9 @@ public class EditController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ops = new FileOperations();
         entries = new ArrayList<>();
+        categories = new ArrayList<>();
         hintLabel.setText("Choose the category you would like to edit");
-        choiceBox.getItems().addAll("Sexism", "Drugs", "Insults", "Homophobic", "Racism");
+        choiceBox.getItems().addAll(categories);
         choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
@@ -50,22 +52,24 @@ public class EditController implements Initializable {
 
     @FXML
     public void addItemToList(MouseEvent e) {
-        if (!contains(textField.getText().trim())) {
-            if (!textField.getText().trim().equals("")) {
-                entries.add(textField.getText().trim());
-                if(currCategory != null) {
-                    ops.writeToFile(ops.getFileForCategory(currCategory), listToCSString(entries));
+        if(currCategory != null) {
+            if (!contains(textField.getText().trim())) {
+                if (!textField.getText().trim().equals("")) {
+                    entries.add(textField.getText().trim());
+                    ops.writeToFile(ops.getFileByName(currCategory), listToCSString(entries));
+                    listView.setItems(FXCollections.observableList(entries));
+                    display.setText("Word added to category.");
                 } else {
-                    display.setText("You need to choose a category.");
+                    display.setText("Invalid word input.");
                 }
-                display.setText("Word added to category.");
             } else {
-                display.setText("Invalid word input.");
+                display.setText("The entered word already exists.");
             }
         } else {
-            display.setText("The entered word already exists.");
+            display.setText("You need to choose a category.");
         }
         textField.clear();
+
     }
 
     private boolean contains(String word) {
@@ -91,6 +95,10 @@ public class EditController implements Initializable {
     }
 
     private List<String> loadList(String category) {
-        return convertStringToList(ops.readFromFile(ops.getFileForCategory(category)));
+        return convertStringToList(ops.readFromFile(ops.getFileByName(category)));
+    }
+
+    private List<String> loadCategories(String s) {
+        return convertStringToList(ops.readFromFile(ops.getFileByName(s)));
     }
 }
