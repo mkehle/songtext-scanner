@@ -1,3 +1,4 @@
+import file.FileOperations;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,12 @@ public class Main extends Application {
   private final int HEIGHT = 720;
 
   public static void main(String[] args) {
+    FileOperations ops = new FileOperations();
+    ops.createFile("sexism.csv");
+    ops.createFile("drugs.csv");
+    ops.createFile("insults.csv");
+    ops.createFile("homophobic.csv");
+    ops.createFile("racism.csv");
     launch(args);
   }
 
