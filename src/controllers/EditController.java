@@ -35,16 +35,16 @@ public class EditController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ops = new FileOperations();
         entries = new ArrayList<>();
+        hintLabel.setText("Choose the category you would like to edit");
         choiceBox.getItems().addAll("Sexism", "Drugs", "Insults", "Homophobic", "Racism");
         choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                currCategory = choiceBox.getSelectionModel().getSelectedItem();
-                entries = loadList(currCategory);
-                listView.setItems(FXCollections.observableList(entries));
-                hintLabel.setText("Your saved words for the category " + currCategory.toLowerCase());
-            }
-        });
+                    currCategory = choiceBox.getSelectionModel().getSelectedItem();
+                    entries = loadList(currCategory);
+                    listView.setItems(FXCollections.observableList(entries));
+                    hintLabel.setText("Your saved words for the category " + currCategory.toLowerCase());
+            }});
         listView.setItems(FXCollections.observableArrayList(entries));
     }
 
@@ -53,7 +53,11 @@ public class EditController implements Initializable {
         if (!contains(textField.getText().trim())) {
             if (!textField.getText().trim().equals("")) {
                 entries.add(textField.getText().trim());
-                ops.writeToFile(ops.getFileForCategory(currCategory), listToCSString(entries));
+                if(currCategory != null) {
+                    ops.writeToFile(ops.getFileForCategory(currCategory), listToCSString(entries));
+                } else {
+                    display.setText("You need to choose a category.");
+                }
                 display.setText("Word added to category.");
             } else {
                 display.setText("Invalid word input.");
@@ -76,12 +80,14 @@ public class EditController implements Initializable {
         return output;
     }
 
-    private List<String> convertStringToList(String text) {
+    private ArrayList<String> convertStringToList(String text) {
+        ArrayList<String> output = new ArrayList<>();
         if (text != null) {
             String[] words = text.split(",");
-            return Arrays.asList(words);
+            Collections.addAll(output, words);
+            return output;
         }
-        return new ArrayList<>();
+        return output;
     }
 
     private List<String> loadList(String category) {

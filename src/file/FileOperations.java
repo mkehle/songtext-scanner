@@ -28,14 +28,17 @@ public class FileOperations {
     }
 
     public File getFileForCategory(String category) {
-        String catName = category.toLowerCase();
-        File file = new File("A:\\Coding Projects\\resources\\files\\" + catName + ".csv");
-        if (file.exists()) {
-            return file;
-        } else {
-            System.out.println("When loading file in getFileForTab() a error occured");
-            return null;
+        if(category != null) {
+            String catName = category.toLowerCase();
+            File file = new File("A:\\Coding Projects\\resources\\files\\" + catName + ".csv");
+            if (file.exists()) {
+                return file;
+            } else {
+                System.out.println("When loading file in getFileForTab() a error occured");
+                return null;
+            }
         }
+        return null;
     }
 
     public String readFromFile(File file) {
