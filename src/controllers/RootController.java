@@ -40,6 +40,7 @@ public class RootController {
   @FXML
   public void switchToEditCategories(MouseEvent e) throws IOException {
     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditCategories.fxml"));
+    EditController editController = loader.getController();
     anchorPane.getChildren().clear();
     anchorPane.getChildren().add(loader.load());
   }

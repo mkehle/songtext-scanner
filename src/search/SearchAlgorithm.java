@@ -1,7 +1,14 @@
 package search;
 
+import file.FileOperations;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class SearchAlgorithm {
   private String[] words;
+  private FileOperations ops;
 
   public SearchAlgorithm(String text) {
     words = text.split("\\P{L}+");
@@ -19,5 +26,15 @@ public class SearchAlgorithm {
       }
     }
     return counter;
+  }
+
+  public HashMap<String, Integer> countOccCat(String category) {
+    HashMap<String, Integer> output = new HashMap<>();
+    List<String> categories = new ArrayList<>();
+    categories.addAll(ops.loadCategories("categories"));
+
+
+
+    return output;
   }
 }

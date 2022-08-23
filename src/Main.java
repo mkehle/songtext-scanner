@@ -13,7 +13,7 @@ public class Main extends Application {
     FileOperations ops = new FileOperations();
     ops.createFile("categories.csv");
     ops.createCategoryFiles("categories");
-    //launch(args);
+    launch(args);
   }
 
   @Override

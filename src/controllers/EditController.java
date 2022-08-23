@@ -5,10 +5,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,6 +30,12 @@ public class EditController implements Initializable {
     private Label display;
     @FXML
     private Label hintLabel;
+    @FXML
+    private Button removeButton;
+    @FXML
+    private Button clearButton;
+    @FXML
+    private Button backButton;
     private List<String> entries;
     private List<String> categories;
     private FileOperations ops;
@@ -37,13 +46,14 @@ public class EditController implements Initializable {
         ops = new FileOperations();
         entries = new ArrayList<>();
         categories = new ArrayList<>();
+        categories.addAll(ops.loadCategories("categories"));
         hintLabel.setText("Choose the category you would like to edit");
         choiceBox.getItems().addAll(categories);
         choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                     currCategory = choiceBox.getSelectionModel().getSelectedItem();
-                    entries = loadList(currCategory);
+                    entries = ops.loadList(currCategory);
                     listView.setItems(FXCollections.observableList(entries));
                     hintLabel.setText("Your saved words for the category " + currCategory.toLowerCase());
             }});
@@ -56,7 +66,7 @@ public class EditController implements Initializable {
             if (!contains(textField.getText().trim())) {
                 if (!textField.getText().trim().equals("")) {
                     entries.add(textField.getText().trim());
-                    ops.writeToFile(ops.getFileByName(currCategory), listToCSString(entries));
+                    ops.writeToFile(ops.getFileByName(currCategory), ops.listToCSString(entries));
                     listView.setItems(FXCollections.observableList(entries));
                     display.setText("Word added to category.");
                 } else {
@@ -79,26 +89,36 @@ public class EditController implements Initializable {
         return false;
     }
 
-    private String listToCSString(List<String> list) {
-        String output = list.stream().collect(Collectors.joining(","));
-        return output;
-    }
-
-    private ArrayList<String> convertStringToList(String text) {
-        ArrayList<String> output = new ArrayList<>();
-        if (text != null) {
-            String[] words = text.split(",");
-            Collections.addAll(output, words);
-            return output;
+    @FXML
+    public void removeItemFromList(MouseEvent e) {
+        if(currCategory != null) {
+            if(listView.getSelectionModel().getSelectedItem() != null) {
+                String s = listView.getSelectionModel().getSelectedItem();
+                entries.remove(s);
+                ops.writeToFile(ops.getFileByName(currCategory), ops.listToCSString(entries));
+                listView.setItems(FXCollections.observableList(entries));
+            } else {
+                display.setText("You have to select an item to remove.");
+            }
+        } else {
+            display.setText("Select a category and word to remove first.");
         }
-        return output;
     }
 
-    private List<String> loadList(String category) {
-        return convertStringToList(ops.readFromFile(ops.getFileByName(category)));
+    @FXML
+    public void clearList(MouseEvent e) {
+        if(currCategory != null) {
+            entries.clear();
+            ops.writeToFile(ops.getFileByName(currCategory), ops.listToCSString(entries));
+            listView.setItems(FXCollections.observableList(entries));
+        } else {
+            display.setText("Choose a category first.");
+        }
     }
 
-    private List<String> loadCategories(String s) {
-        return convertStringToList(ops.readFromFile(ops.getFileByName(s)));
+    @FXML
+    public void switchToMainScreen(MouseEvent e) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Root.fxml"));
+        backButton.getScene().setRoot(root);
     }
 }

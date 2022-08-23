@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -32,5 +33,11 @@
             <Font size="18.0" />
          </font>
       </Button>
+      <Label layoutX="524.0" layoutY="203.0" prefHeight="27.0" prefWidth="367.0" text="Choose the category you would like to search">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="categoryBox" layoutX="524.0" layoutY="242.0" prefWidth="150.0" />
    </children>
 </AnchorPane>

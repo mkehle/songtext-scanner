@@ -3,6 +3,10 @@ package file;
 import javafx.scene.control.Tab;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileOperations {
 
@@ -56,5 +60,28 @@ public class FileOperations {
         for(String s : arrCategories) {
             createFile(s + ".csv");
         }
+    }
+
+    public String listToCSString(List<String> list) {
+        String output = list.stream().collect(Collectors.joining(","));
+        return output;
+    }
+
+    public ArrayList<String> convertStringToList(String text) {
+        ArrayList<String> output = new ArrayList<>();
+        if (text != null) {
+            String[] words = text.split(",");
+            Collections.addAll(output, words);
+            return output;
+        }
+        return output;
+    }
+
+    public List<String> loadList(String category) {
+        return convertStringToList(readFromFile(getFileByName(category)));
+    }
+
+    public List<String> loadCategories(String s) {
+        return convertStringToList(readFromFile(getFileByName(s)));
     }
 }
